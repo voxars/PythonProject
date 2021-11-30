@@ -6,6 +6,8 @@ from flask.cli import with_appcontext
 
 # https://sites.uclouvain.be/P2SINF/flask/tutorial/database.html
 
+# Connexion BDD
+
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -16,6 +18,8 @@ def get_db():
 
     return g.db
 
+
+# Deconnexion BDD
 
 def close_db(e=None):
     db = g.pop('db', None)

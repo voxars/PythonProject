@@ -31,3 +31,6 @@ CREATE TABLE location{
     dateFin DATE NOT NULL,
     restitution DATE,
 };
+
+INSERT INTO user VALUES ('1','1','nom1','prenom1','01/01/1999','email@email.com');
+
