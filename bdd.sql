@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS auteur;
+DROP TABLE IF EXISTS location;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,5 +34,5 @@ CREATE TABLE location(
     restitution DATE
 );
 
-INSERT INTO user VALUES ('1','1','nom1','prenom1','01/01/1999','email@email.com');
+INSERT INTO user VALUES (1,'1','1','nom1','prenom1','01/01/1999','email@email.com');
 
