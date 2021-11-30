@@ -6,22 +6,28 @@ CREATE TABLE user (
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   nom TEXT NOT NULL,
-  prenom TEXT NOT NULL
+  prenom TEXT NOT NULL,
+  dateDeNaissance DATE,
+  email TEXT NOT NULL, 
 );
 CREATE TABLE book{
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titre TEXT NOT NULL,
     auteur TEXT NOT NULL,
-    quantite INTEGER NOT NULL
+    quantite INTEGER NOT NULL,
+    dateDeParution DATE,
+    genre TEXT NOT NULL,
 };
 CREATE TABLE auteur{
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT NOT NULL,id INTEGER PRIMARY KEY AUTOINCREMENT,
-    prenom TEXT NOT NULL
+    prenom TEXT NOT NULL,
+    nationalité TEXT NOT NULL,
+    dateDeNaissance DATE,
 };
-CREATE TABLE emprunt{
+CREATE TABLE location{
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     dateDebut DATE NOT NULL,
     dateFin DATE NOT NULL,
-    restitution DATE
-}
+    restitution DATE,
+};
