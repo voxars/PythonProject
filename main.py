@@ -2,17 +2,11 @@ import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
-from flask import Flask,render_template
+from flask import Flask,render_template,session,url_for,request
+
 
 app = Flask(__name__)
 DATABASE = "./main.db"
-
-
-
-@app.route("/")
-def index():
-    
-    return render_template('index.html')
 
 
 # https://sites.uclouvain.be/P2SINF/flask/tutorial/database.html
@@ -65,3 +59,24 @@ def create_app():
     db.init_app(app)
 
     return app
+
+# ROUTE
+#Init ROUTE
+@app.route("/")
+def index():
+    return render_template('index.html')
+
+
+# ROUTE   
+@app.route('/post-login', methods=['post'])
+def login():
+    if request.method == 'POST':
+         username = request.form['username']
+         password = request.form['password']
+         print('Username:',username, 'password',password)
+         return 'Page de traitement'
+    else:
+         return render_template('index.html')
+
+    
+        
