@@ -9,6 +9,7 @@ from werkzeug.utils import redirect
 
 app = Flask(__name__)
 DATABASE = "./main.db"
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 # https://sites.uclouvain.be/P2SINF/flask/tutorial/database.html
@@ -89,21 +90,26 @@ def login():
          hashpassword = checkLogin(username, password)
          if check_password_hash(hashpassword,password):
              # todo redirect to create book 
-             
+             session['username'] = request.form['username']
              return redirect('/list')
          else:
+             session.pop('username', None)
              return 'Accès non autorisé'
     else:
          return render_template('index.html')
 
 
 
+@app.route('/notConnected')
+def notConnect():
+    return render_template("notconnected.html")
+
 @app.route('/list')
 def list():
-    
-   click.echo('list hihihih.')
-   rows = query_db('select * from book')
-   return render_template("ListBooks.html",rows = rows)
+     if 'username' in session:
+         rows = query_db('select * from book')
+         return render_template("ListBooks.html",rows = rows)
+     return redirect('/notConnected')
 
 
 @app.route('/createBook')
