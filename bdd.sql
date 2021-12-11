@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS book;
-DROP TABLE IF EXISTS auteur;
-DROP TABLE IF EXISTS location;
+DROP TABLE IF EXISTS author;
+DROP TABLE IF EXISTS rental;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,14 +20,14 @@ CREATE TABLE book(
     dateDeParution DATE,
     genre TEXT NOT NULL
 );
-CREATE TABLE auteur(
+CREATE TABLE author(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nom TEXT NOT NULL,
     prenom TEXT NOT NULL,
     nationalité TEXT NOT NULL,
     dateDeNaissance DATE
 );
-CREATE TABLE location(
+CREATE TABLE rental(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     dateDebut DATE NOT NULL,
     dateFin DATE NOT NULL,
