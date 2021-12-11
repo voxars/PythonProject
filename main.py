@@ -88,7 +88,8 @@ def login():
          print('Username:',username, 'password',password)
          hashpassword = checkLogin(username, password)
          if check_password_hash(hashpassword,password):
-             # todo redirect to create book page
+             # todo redirect to create book 
+             
              return redirect('/list')
          else:
              return 'Accès non autorisé'
@@ -103,6 +104,16 @@ def list():
    click.echo('list hihihih.')
    rows = query_db('select * from book')
    return render_template("ListBooks.html",rows = rows)
+
+
+@app.route('/createBook')
+def createBook():
+    
+   click.echo('Book.')
+
+   return render_template("CreateBook.html")
+
+
 
 
 def checkLogin(username, password):
