@@ -4,6 +4,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 from flask import Flask,render_template,session,url_for,request
 from werkzeug.security import check_password_hash
+from werkzeug.utils import redirect
 
 
 app = Flask(__name__)
@@ -87,11 +88,21 @@ def login():
          print('Username:',username, 'password',password)
          hashpassword = checkLogin(username, password)
          if check_password_hash(hashpassword,password):
-             return 'Accès autorisé'
+             # todo redirect to create book page
+             return redirect('/list')
          else:
              return 'Accès non autorisé'
     else:
          return render_template('index.html')
+
+
+
+@app.route('/list')
+def list():
+    
+   click.echo('list hihihih.')
+   rows = query_db('select * from book')
+   return render_template("ListBooks.html",rows = rows)
 
 
 def checkLogin(username, password):
@@ -102,6 +113,10 @@ def checkLogin(username, password):
     else:
         return user['password']
 
+
+def addBook(title,author,quantity,kind):
+     cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
+     get_db().commit()
 
 
 
