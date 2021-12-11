@@ -118,9 +118,7 @@ def createBook():
 
 @app.route('/post-book', methods=['post'])
 def postBook():
-   if 'username' in session:
-      click.echo('post book.')
-   return notConnect()
+   click.echo('post book.')
 
    if request.method == 'POST':
       title = request.form['title']
@@ -128,9 +126,9 @@ def postBook():
       quantity = request.form['quantity']
       kind = request.form['kind']
       addBook(title, author, int(quantity), kind)
-return redirect('/list')
-else:
-return render_template('index.html')
+      return redirect('/list')
+   else:
+      return render_template('index.html')
 
 @app.route('/logout')
 def logout():
@@ -152,10 +150,3 @@ def addBook(title,author,quantity,kind):
    if 'username' in session:
       cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
       get_db().commit()
-
-
-
-
-
-    
-        
