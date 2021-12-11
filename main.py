@@ -3,6 +3,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 from flask import Flask,render_template,session,url_for,request
+from werkzeug.security import check_password_hash
 
 
 app = Flask(__name__)
@@ -38,6 +39,13 @@ def init_db():
 
     with current_app.open_resource('bdd.sql') as f:
         db.executescript(f.read().decode('utf8'))
+    print('db create')    
+
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
 
 
 @app.cli.command('init-db')
@@ -45,7 +53,7 @@ def init_db():
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
-    click.echo('Initialized the database.')
+    click.echo('Database initialized.')
 
 def init_app(app):
     app.teardown_appcontext(close_db)
@@ -67,6 +75,9 @@ def index():
     return render_template('index.html')
 
 
+
+
+
 # ROUTE   
 @app.route('/post-login', methods=['post'])
 def login():
@@ -74,9 +85,27 @@ def login():
          username = request.form['username']
          password = request.form['password']
          print('Username:',username, 'password',password)
-         return 'Page de traitement'
+         hashpassword = checkLogin(username, password)
+         if check_password_hash(hashpassword,password):
+             return 'Accès autorisé'
+         else:
+             return 'Accès non autorisé'
     else:
          return render_template('index.html')
+
+
+def checkLogin(username, password):
+    user = query_db('select * from user where username = ?',
+                [username], one=True)
+    if user is None:
+        return 'No such user'
+    else:
+        return user['password']
+
+
+
+
+
 
     
         
