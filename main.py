@@ -114,11 +114,21 @@ def list():
 
 @app.route('/createBook')
 def createBook():
-    
-   click.echo('Book.')
-
    return render_template("CreateBook.html")
 
+@app.route('/post-book', methods=['post'])
+def postBook():
+    click.echo('post book.')
+
+    if request.method == 'POST':
+         title = request.form['title']
+         author = request.form['author']
+         quantity = request.form['quantity']
+         kind = request.form['kind']
+         addBook(title, author, int(quantity), kind)
+         return redirect('/list')
+    else:
+         return render_template('index.html')
 
 
 
@@ -132,8 +142,9 @@ def checkLogin(username, password):
 
 
 def addBook(title,author,quantity,kind):
-     cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
-     get_db().commit()
+     if 'username' in session:
+        cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
+        get_db().commit()
 
 
 
