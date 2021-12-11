@@ -5,9 +5,8 @@ from flask.cli import with_appcontext
 from flask import Flask,render_template
 
 app = Flask(__name__)
+DATABASE = "./main.db"
 
-
-DATABASE= "main.db"
 
 
 @app.route("/")
@@ -16,12 +15,9 @@ def index():
     return render_template('index.html')
 
 
-import sqlite3
-
-
 # https://sites.uclouvain.be/P2SINF/flask/tutorial/database.html
 
-# Connexion BDD
+#  Database Connection
 
 def get_db():
     if 'db' not in g:
@@ -34,7 +30,7 @@ def get_db():
     return g.db
 
 
-# Deconnexion BDD
+# Database Disconnection
 
 def close_db(e=None):
     db = g.pop('db', None)
@@ -42,7 +38,7 @@ def close_db(e=None):
     if db is not None:
         db.close()  
 
-# Création des tables
+# Create table
 def init_db():
     db = get_db()
 
