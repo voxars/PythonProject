@@ -7,16 +7,16 @@ CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
-  nom TEXT NOT NULL,
-  prenom TEXT NOT NULL,
+  lastName TEXT NOT NULL,
+  firstNameTEXT NOT NULL,
   email TEXT NOT NULL
 );
 CREATE TABLE book(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    titre TEXT NOT NULL,
-    auteur TEXT NOT NULL,
-    quantite INTEGER NOT NULL,
-    genre TEXT NOT NULL
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    salutation TEXT NOT NULL
 );
 CREATE TABLE author(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
