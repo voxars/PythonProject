@@ -17,64 +17,64 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 #  Database Connection
 
 def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            DATABASE,
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
+   if 'db' not in g:
+      g.db = sqlite3.connect(
+         DATABASE,
+         detect_types=sqlite3.PARSE_DECLTYPES
+      )
+      g.db.row_factory = sqlite3.Row
 
-    return g.db
+   return g.db
 
 
 # Database Disconnection
 
 def close_db(e=None):
-    db = g.pop('db', None)
+   db = g.pop('db', None)
 
-    if db is not None:
-        db.close()  
+   if db is not None:
+      db.close()
 
-# Create table
+   # Create table
 def init_db():
-    db = get_db()
+   db = get_db()
 
-    with current_app.open_resource('bdd.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-    print('db create')    
+   with current_app.open_resource('bdd.sql') as f:
+      db.executescript(f.read().decode('utf8'))
+   print('db create')
 
 def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
+   cur = get_db().execute(query, args)
+   rv = cur.fetchall()
+   cur.close()
+   return (rv[0] if rv else None) if one else rv
 
 
 @app.cli.command('init-db')
 @with_appcontext
 def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Database initialized.')
+   """Clear the existing data and create new tables."""
+   init_db()
+   click.echo('Database initialized.')
 
 def init_app(app):
-    app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
+   app.teardown_appcontext(close_db)
+   app.cli.add_command(init_db_command)
 
 def create_app():
-    app = ...
-    # existing code omitted
+   app = ...
+   # existing code omitted
 
-    from . import db
-    db.init_app(app)
+   from . import db
+   db.init_app(app)
 
-    return app
+   return app
 
 # ROUTE
 #Init ROUTE
 @app.route("/")
 def index():
-    return render_template('index.html')
+   return render_template('index.html')
 
 
 
@@ -83,33 +83,33 @@ def index():
 # ROUTE   
 @app.route('/post-login', methods=['post'])
 def login():
-    if request.method == 'POST':
-         username = request.form['username']
-         password = request.form['password']
-         print('Username:',username, 'password',password)
-         hashpassword = checkLogin(username, password)
-         if check_password_hash(hashpassword,password):
-             # todo redirect to create book 
-             session['username'] = request.form['username']
-             return redirect('/list')
-         else:
-             session.pop('username', None)
-             return 'Accès non autorisé'
-    else:
-         return render_template('index.html')
+   if request.method == 'POST':
+      username = request.form['username']
+      password = request.form['password']
+      print('Username:',username, 'password',password)
+      hashpassword = checkLogin(username, password)
+      if check_password_hash(hashpassword,password):
+         # todo redirect to create book
+         session['username'] = request.form['username']
+         return redirect('/list')
+      else:
+         session.pop('username', None)
+         return 'Accès non autorisé'
+   else:
+      return render_template('index.html')
 
 
 
 @app.route('/notConnected')
 def notConnect():
-    return render_template("notconnected.html")
+   return render_template("notconnected.html")
 
 @app.route('/list')
 def list():
-     if 'username' in session:
-         rows = query_db('select * from book')
-         return render_template("ListBooks.html",rows = rows)
-     return redirect('/notConnected')
+   if 'username' in session:
+      rows = query_db('select * from book')
+      return render_template("ListBooks.html",rows = rows)
+   return redirect('/notConnected')
 
 
 @app.route('/createBook')
@@ -118,38 +118,40 @@ def createBook():
 
 @app.route('/post-book', methods=['post'])
 def postBook():
-    click.echo('post book.')
+   if 'username' in session:
+      click.echo('post book.')
+   return notConnect()
 
-    if request.method == 'POST':
-         title = request.form['title']
-         author = request.form['author']
-         quantity = request.form['quantity']
-         kind = request.form['kind']
-         addBook(title, author, int(quantity), kind)
-         return redirect('/list')
-    else:
-         return render_template('index.html')
+   if request.method == 'POST':
+      title = request.form['title']
+      author = request.form['author']
+      quantity = request.form['quantity']
+      kind = request.form['kind']
+      addBook(title, author, int(quantity), kind)
+return redirect('/list')
+else:
+return render_template('index.html')
 
 @app.route('/logout')
 def logout():
-     session.pop('username', None)
-     return redirect('/')
+   session.pop('username', None)
+   return redirect('/')
 
 
 
 def checkLogin(username, password):
-    user = query_db('select * from user where username = ?',
-                [username], one=True)
-    if user is None:
-        return 'No such user'
-    else:
-        return user['password']
+   user = query_db('select * from user where username = ?',
+                   [username], one=True)
+   if user is None:
+      return 'No such user'
+   else:
+      return user['password']
 
 
 def addBook(title,author,quantity,kind):
-     if 'username' in session:
-        cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
-        get_db().commit()
+   if 'username' in session:
+      cur = get_db().execute('INSERT INTO Book (title, author, quantity, kind) VALUES ( ?, ?, ?, ? )', [title,author,quantity,kind])
+      get_db().commit()
 
 
 
