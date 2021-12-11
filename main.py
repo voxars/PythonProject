@@ -130,6 +130,11 @@ def postBook():
     else:
          return render_template('index.html')
 
+@app.route('/logout')
+def logout():
+     session.pop('username', None)
+     return redirect('/')
+
 
 
 def checkLogin(username, password):
